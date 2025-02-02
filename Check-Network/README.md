@@ -40,6 +40,9 @@ To run the script at regular intervals, you can use `cron`. Here's how to set it
 
 3. Add a line to schedule the script. For example, to run the script every 5 minutes, add:
     ```bash
+    SHELL=/bin/sh
+    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+    
     */5 * * * * Check_Network.sh <VM_NAME>
     ```
 
