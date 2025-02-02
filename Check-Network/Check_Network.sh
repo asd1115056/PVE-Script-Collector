@@ -10,7 +10,7 @@ TIMEOUT_THRESHOLD=5       # Number of failed checks before restarting
 
 # Exit if VM_NAME is empty
 if [ -z "$VM_NAME" ]; then
-    echo "Error: VM name is required."
+    logger -t vm_network_check "Error: VM name is required."
     exit 1
 fi
 
