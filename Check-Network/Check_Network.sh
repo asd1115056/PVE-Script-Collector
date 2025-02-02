@@ -5,8 +5,8 @@
 # Configuration
 TARGET="8.8.8.8"          # Target IP for connectivity check
 VM_NAME="$1"              # VM name, passed as the first argument
-PACKET_LOSS_THRESHOLD=40  # Threshold for packet loss percentage to trigger a restart
-SLEEP_INTERVAL=5          # Delay (in seconds) before restarting the VM
+PACKET_LOSS_THRESHOLD="${2:-40}"  # Threshold for packet loss percentage to trigger a restart, default to 40 if not provided
+SLEEP_INTERVAL="${3:-30}"          # Delay (in seconds) before restarting the VM, default to 5 if not provided
 
 # Ensure VM name is provided
 if [ -z "$VM_NAME" ]; then
