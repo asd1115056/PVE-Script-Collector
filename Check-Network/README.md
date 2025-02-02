@@ -21,10 +21,20 @@ To address this, the `Check_Network.sh` script is designed to monitor the networ
 To use the script, run the following command:
 
 ```bash
-./Check_Network.sh <VM_NAME>
+./Check_Network.sh <VM_NAME> [PACKET_LOSS_THRESHOLD] [SLEEP_INTERVAL]
 ```
 
-Replace `<VM_NAME>` with the name of the virtual machine you want to monitor.
+Replace `<VM_NAME>` with the name of the virtual machine you want to monitor. The optional parameters are:
+- `PACKET_LOSS_THRESHOLD`: The percentage of packet loss that will trigger a VM restart (default is `40` if not provided).
+- `SLEEP_INTERVAL`: The delay (in seconds) before restarting the VM (default is `30` if not provided).
+
+## Example
+
+To monitor a VM named `my_vm` with a custom packet loss threshold of `50%` and a sleep interval of `10` seconds, you would run:
+
+```bash
+./Check_Network.sh my_vm 50 10
+```
 
 ## Scheduled Execution
 
@@ -42,8 +52,8 @@ To run the script at regular intervals, you can use `cron`. Here's how to set it
     ```bash
     SHELL=/bin/sh
     PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-    
-    */5 * * * * Check_Network.sh <VM_NAME>
+
+    */5 * * * * Check_Network.sh <VM_NAME> [PACKET_LOSS_THRESHOLD] [SLEEP_INTERVAL]
     ```
 
     Replace `<VM_NAME>` with the name of the virtual machine.
