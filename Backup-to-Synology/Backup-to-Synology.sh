@@ -2,6 +2,9 @@
 
 # Input Values
 SERVER_MAC="$1"
+SERVER_USER="$2"
+SERVER_PASSWORD="$3"
+SERVER_SSH_PORT="$4"
 
 # Default values
 SCAN_RANGE="192.168.200.0/24"
@@ -75,4 +78,44 @@ power_on() {
     fi
 }
 
+power_off() {
+    echo "Starting power off sequence for device with MAC: $SERVER_MAC"
+    start_time=$(date +%s)
+
+    # Check if the device is online
+    if check_device_online; then
+
+        local ssh_cmd="sshpass -p ${SERVER_PASSWORD} ssh -p ${SERVER_SSH_PORT} -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${SERVER_USER}@${SERVER_IP}"
+
+        # Try to power off using sudo
+        output=$(echo "${SERVER_PASSWORD}" | ${ssh_cmd} 'sudo -S shutdown now' 2>&1)
+
+        # If sudo fails, try shutdown without sudo
+        if echo "$output" | grep -q "sudo: command not found"; then
+            output=$(${ssh_cmd} "shutdown now" 2>&1)
+        fi
+
+        # Wait for device offline
+        sleep 15s
+
+        # Check if the device is offline
+        if ping -w 2 -c 1 "$SERVER_IP" > /dev/null; then
+            echo "Power off sequence failed. Device still online."
+            echo -e "SSH ouput: ${output}"
+            echo ""
+        else
+            # Get end time and calculate elapsed time
+            end_time=$(date +%s)
+            elapsed_time=$((end_time - start_time))
+            echo "Power off sequence completed successfully in $elapsed_time seconds"
+            return 0 # Success
+        fi
+    else
+        echo "Power off sequence failed. Device is not online."
+        return 1 # Failure
+    fi
+}
+
+
 power_on "$SERVER_MAC"
+#power_off
